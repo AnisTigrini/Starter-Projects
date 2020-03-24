@@ -1,0 +1,88 @@
+# Building my first application using Tkinter as GUI in Python3 :-)
+import tkinter
+
+root = tkinter.Tk()
+root.geometry('215x285')
+root.title("Calculator")
+
+# Defining the functionalities
+def my_function(number):
+    current = my_entry.get()
+    my_entry.delete(0, 999)
+    my_entry.insert(0, str(current) + str(number))
+    if number == "Clear":
+        my_entry.delete(0, 999)
+
+def additions():
+    first_number = my_entry.get()
+    global f_num, my_operator
+    my_operator = "plus"
+    f_num = int(first_number)
+    my_entry.delete(0, 999)
+
+def substraction():
+    first_number = my_entry.get()
+    global f_num, my_operator
+    my_operator = "minus"
+    f_num = int(first_number)
+    my_entry.delete(0, 999)
+
+def multiply():
+    first_number = my_entry.get()
+    global f_num, my_operator
+    my_operator = "multiply"
+    f_num = int(first_number)
+    my_entry.delete(0, 999)
+
+
+def equals():
+    second_number = my_entry.get()
+    my_entry.delete(0, 999)
+    if my_operator == "plus":
+        my_entry.insert(0, int(second_number) + f_num)
+    elif my_operator == "minus":
+        my_entry.insert(0, f_num - int(second_number))
+    elif my_operator == "multiply":
+        my_entry.insert(0, int(second_number) * f_num)
+
+        
+# Creating the numbers, dialog box, and operators
+my_entry = tkinter.Entry(root, width = 25)
+plus = tkinter.Button(root, text = "+", width = 3, height = 3, command = additions)
+minus = tkinter.Button(root, text = "-", width = 3, height = 3, command = substraction)
+multiplication = tkinter.Button(root, text = "*", width = 3, height = 3, command = multiply)
+clear = tkinter.Button(root, text = "Clear", width = 10, height = 3, command = lambda: my_function("Clear"))
+equal = tkinter.Button(root, text = "=", width = 3, height = 3, command = equals)
+
+a = tkinter.Button(root, text = 1, width = 3, height = 3, command = lambda: my_function(1))
+b = tkinter.Button(root, text = 2, width = 3, height = 3, command = lambda: my_function(2))
+c = tkinter.Button(root, text = 3, width = 3, height = 3, command = lambda: my_function(3))
+d = tkinter.Button(root, text = 4, width = 3, height = 3, command = lambda: my_function(4))
+e = tkinter.Button(root, text = 5, width = 3, height = 3, command = lambda: my_function(5))
+f = tkinter.Button(root, text = 6, width = 3, height = 3, command = lambda: my_function(6))
+g = tkinter.Button(root, text = 7, width = 3, height = 3, command = lambda: my_function(7))
+h = tkinter.Button(root, text = 8, width = 3, height = 3, command = lambda: my_function(8))
+i = tkinter.Button(root, text = 9, width = 3, height = 3, command = lambda: my_function(9))
+j = tkinter.Button(root, text = 0, width = 3, height = 3, command = lambda: my_function(0))
+
+
+# Position of button in the application
+my_entry.grid(column = 0, row = 0, columnspan = 5)
+a.grid(column = 0, row = 1)
+b.grid(column = 1, row = 1)
+c.grid(column = 2, row = 1)
+d.grid(column = 0, row = 2)
+e.grid(column = 1, row = 2)
+f.grid(column = 2, row = 2)
+g.grid(column = 0, row = 3)
+h.grid(column = 1, row = 3)
+i.grid(column = 2, row = 3)
+j.grid(column = 0, row = 4)
+clear.grid(column = 1, row = 4, columnspan = 2)
+plus.grid(column = 4, row = 1)
+minus.grid(column = 4, row = 2)
+multiplication.grid(column = 4, row = 3)
+equal.grid(column = 4, row = 4)
+
+
+root.mainloop()
