@@ -1,0 +1,117 @@
+# icons downloaded on https://www.flaticon.com/free-icons/library
+import pygame
+from pygame.locals import *
+from pygame import mixer
+
+
+# initializing screen
+pygame.init()
+screen = pygame.display.set_mode((800,600))
+YELLOW = (225,255,0)
+mixer.music.load("song.mp3")
+mixer.music.play()
+
+# Title and icon
+pygame.display.set_caption("Space Odyssey")
+icon = pygame.image.load("soldier.png")
+pygame.display.set_icon(icon)
+bulletOne = pygame.image.load("bullet.png")
+explosion = pygame.image.load("explosion.png")
+bullettwo = pygame.image.load("bullet.png")
+
+# Creation of a player and shooting function
+playerImage = pygame.image.load("spaceship.png")
+alienImage = pygame.image.load("alien.png")
+playerx = 368
+playery = 500
+alienx = 368
+alieny = 120
+bulletx = playerx
+bullety = playery
+
+def player(x, y):
+    screen.blit(playerImage, (x,y))
+
+def alien(x, y):
+    screen.blit(alienImage, (x,y))
+
+def shoot(x,y):
+    screen.blit(bulletOne, (x,y))
+    screen.blit(bullettwo, (x+15,y))
+
+
+# Game loop
+a = True
+time = 0
+numberOfHits = 0
+pause = 0
+b = False
+c = True
+running = True
+while running:
+    # Game quitting option
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+    # Player Moving
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_RIGHT]:
+        playerx += 0.3
+    if keys[pygame.K_LEFT]:
+        playerx -= 0.3
+    if keys[pygame.K_SPACE]:
+        b = True   
+    if playerx <= 7:
+        playerx = 8
+    elif playerx >= 770:
+        playerx = 769
+
+    # Alien moving
+    if a is True and alienx < 770:
+        alienx += 0.25
+    else:
+        a = False
+    if a is False and alienx > 10:
+        alienx -= 0.25
+    else:
+        a = True
+    if alienx == 770 or alienx == 10:
+        alieny += 55
+    
+    # Shooting
+    if b is True and bullety > 100:
+        bullety -= 1
+    elif bullety == 100:
+        b = False
+    if b is False:
+        bulletx = playerx
+        bullety = playery
+    
+    
+    screen.fill(YELLOW)
+    
+    # Collision module
+    if numberOfHits < 3:
+        alien(alienx,alieny)
+        if abs(alieny - bullety) < 10 and abs(alienx - bulletx) < 15:
+            screen.blit(explosion, (alienx, alieny))
+            numberOfHits += 0.05
+    elif numberOfHits >= 3:
+        if pause < 4500:    
+            pause += 1
+        else:
+            pause = 0
+            numberOfHits = 0
+            alienx = 368
+            alieny = 120
+    
+    if abs(alieny - playery) < 10 and abs(alienx - playerx) < 10:
+        running = False
+        print("game over")
+
+    alien(10,10)
+    player(playerx, playery)
+    shoot(bulletx, bullety)
+    pygame.display.update()
+
+pygame.quit()
