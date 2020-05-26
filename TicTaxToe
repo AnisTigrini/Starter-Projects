@@ -1,0 +1,113 @@
+import pygame
+import time
+
+pygame.init()
+screen = pygame.display.set_mode((300,300))
+
+yellow = (255,255,0)
+letters = None
+xpiece = "x"
+opiece = "o"
+gameMatrix = [[letters, letters, letters],
+             [letters, letters, letters], 
+             [letters, letters, letters]]
+
+
+def drawLines():
+    for i in range(1,4):
+        pygame.draw.line(screen, (0,0,255), (i*100, 0), (i*100, 300))
+        pygame.draw.line(screen, (0,0,255), (0, i*100), (300, i*100))
+
+def simpleGameplayRules():
+    for i in range(0,3):
+        # Checking if we have a winner on the x axis
+        if gameMatrix[i][0] == gameMatrix[i][1] and gameMatrix[i][1] == gameMatrix[i][2] and gameMatrix[i][1] == "x":
+            return "X is the Winner"
+        elif gameMatrix[i][0] == gameMatrix[i][1] and gameMatrix[i][1] == gameMatrix[i][2] and gameMatrix[i][1] == "o":
+            return "O is the Winner"
+        # Checking if we have a winner on the y axis
+        elif gameMatrix[0][i] == gameMatrix[1][i] and gameMatrix[1][i] == gameMatrix[2][i] and gameMatrix[1][i] == "x":
+            return "X is the Winner"
+        elif gameMatrix[0][i] == gameMatrix[1][i] and gameMatrix[1][i] == gameMatrix[2][i] and gameMatrix[1][i] == "o":
+            return "O is the Winner"
+        # Checking if we have a winner on diagonals
+        elif gameMatrix[0][0] == gameMatrix[1][1] and gameMatrix[1][1] == gameMatrix[2][2] and gameMatrix[1][1] == "x":
+            return "X is the Winner"
+        elif gameMatrix[0][0] == gameMatrix[1][1] and gameMatrix[1][1] == gameMatrix[2][2] and gameMatrix[1][1] == "o":
+            return "O is the Winner"
+        elif gameMatrix[0][2] == gameMatrix[1][1] and gameMatrix[1][1] == gameMatrix[2][0] and gameMatrix[1][1] == "x":
+            return "X is the Winner"
+        elif gameMatrix[0][2] == gameMatrix[1][1] and gameMatrix[1][1] == gameMatrix[2][0] and gameMatrix[1][1] == "o":
+            return "O is the Winner"
+
+def drawCross(x,y):
+    pygame.draw.line(screen, (0,0,255), (x-85,y-85), (x-15, y-15))
+    pygame.draw.line(screen, (0,0,255), (x-15,y-85), (x-85, y-15))
+
+def drawCircle(x,y):
+    pygame.draw.circle(screen, (0,0,255), (x-50,y-50) ,35)
+    pygame.draw.circle(screen, yellow, (x-50,y-50) ,34)
+
+playingRow = None
+playingColumn = None
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    screen.fill(yellow)
+    drawLines()
+    x,y = pygame.mouse.get_pos()
+    a,b,c = pygame.mouse.get_pressed()
+    
+    if x < 100:
+        playingRow = 0
+        playingX = 100
+    elif 100 <= x < 200:
+        playingRow = 1
+        playingX = 200
+    elif 200 <= x <= 300:
+        playingRow = 2
+        playingX = 300
+
+    if y < 100:
+        playingColumn = 0
+    elif 100 <= y < 200:
+        playingColumn = 1
+    elif 200 <= y <= 300:
+        playingColumn = 2
+
+    if simpleGameplayRules() == "O is the Winner" or simpleGameplayRules() == "X is the Winner":
+        print(simpleGameplayRules())
+        time.sleep(3)
+        gameMatrix = [[letters, letters, letters], 
+                     [letters, letters, letters], 
+                     [letters, letters, letters]]
+    elif (gameMatrix[0].count(None) + gameMatrix[1].count(None) + gameMatrix[2].count(None)) == 0:
+        print("it seems there are no Winners")
+        time.sleep(3)
+        gameMatrix = [[letters, letters, letters], 
+                     [letters, letters, letters], 
+                     [letters, letters, letters]]
+    else:
+        if gameMatrix[playingColumn][playingRow] == None:
+            if (gameMatrix[0].count(None) + gameMatrix[1].count(None) + gameMatrix[2].count(None)) % 2 == 0:
+                if a == 1:
+                    gameMatrix[playingColumn][playingRow] = xpiece
+            elif (gameMatrix[0].count(None) + gameMatrix[1].count(None) + gameMatrix[2].count(None)) % 2 == 1:
+                if a == 1:
+                    gameMatrix[playingColumn][playingRow] = opiece
+        for i in range(0,3):
+            for j in range(0,3):
+                if gameMatrix[i][j] == "x":
+                    drawCross((j + 1) * 100, (i+1) * 100)
+                elif gameMatrix[i][j] == "o":
+                    drawCircle((j + 1) * 100, (i+1) * 100)  
+
+    pygame.display.update()
+
+pygame.quit()
+
+for i in gameMatrix:
+    print(i)
